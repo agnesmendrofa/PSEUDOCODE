@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSEUDOCODE - Media Pembelajaran Interaktif SMP Kelas IX</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        },
+                        funYellow: '#fef08a',
+                        funPurple: '#f3e8ff',
+                        funGreen: '#dcfce7'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        .btn-ifp {
+            min-height: 52px;
+            font-weight: 600;
+        }
+        .touch-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .touch-card:hover, .touch-card:active {
+            transform: translateY(-4px) scale(1.01);
+        }
+        .active-line {
+            background-color: rgba(251, 191, 36, 0.3) !important;
+            border-left: 5px solid #f59e0b;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+        }
+        .draggable-item {
+            cursor: grab;
+            touch-action: none;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body class="bg-sky-50/50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-sky-100 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 py-3">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('beranda')">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/30">
+                        <i class="fa-solid fa-code text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-xl sm:text-2xl tracking-tight text-sky-900 dark:text-sky-300">PSEUDOCODE</h1>
+                        <p class="text-xs font-semibold text-sky-600 dark:text-sky-400">Informatika Kelas IX SMP</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-1 bg-sky-100/70 dark:bg-slate-900/60 p-1.5 rounded-2xl border border-sky-200/60 dark:border-slate-700">
+                    <button onclick="showPage('beranda')" id="nav-beranda" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-sky-700 dark:text-sky-300 hover:bg-white dark:hover:bg-slate-800 transition-all">BERANDA</button>
+                    <button onclick="showPage('materi')" id="nav-materi" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">MATERI</button>
+                    <button onclick="showPage('contoh')" id="nav-contoh" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">CONTOH</button>
+                    <button onclick="showPage('simulasi')" id="nav-simulasi" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">SIMULASI</button>
+                    <button onclick="showPage('game')" id="nav-game" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">GAME</button>
+                    <button onclick="showPage('latihan')" id="nav-latihan" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">LATIHAN</button>
+                    <button onclick="showPage('kuis')" id="nav-kuis" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">KUIS</button>
+                    <button onclick="showPage('hasil')" id="nav-hasil" class="nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all">HASIL</button>
+                </nav>
+
+                <!-- Quick Action Utilities -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-sky-100 dark:bg-slate-700 text-sky-700 dark:text-sky-300 flex items-center justify-center hover:bg-sky-200 transition-all" title="Audio Effects">
+                        <i id="audio-icon" class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-sky-100 dark:bg-slate-700 text-sky-700 dark:text-sky-300 flex items-center justify-center hover:bg-sky-200 transition-all" title="Dark/Light Mode">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="lg:hidden w-10 h-10 rounded-xl bg-sky-100 dark:bg-slate-700 text-sky-700 dark:text-sky-300 flex items-center justify-center">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-800 border-b border-sky-100 dark:border-slate-700 px-4 py-3 space-y-2">
+            <button onclick="showPage('beranda'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-sky-700 dark:text-sky-300">BERANDA</button>
+            <button onclick="showPage('materi'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">MATERI</button>
+            <button onclick="showPage('contoh'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">CONTOH</button>
+            <button onclick="showPage('simulasi'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">SIMULASI</button>
+            <button onclick="showPage('game'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">GAME</button>
+            <button onclick="showPage('latihan'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">LATIHAN</button>
+            <button onclick="showPage('kuis'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">KUIS</button>
+            <button onclick="showPage('hasil'); toggleMobileMenu()" class="w-full text-left py-2 px-3 rounded-lg font-bold text-slate-700 dark:text-slate-300">HASIL</button>
+        </div>
+
+        <!-- Global Progress Bar -->
+        <div class="w-full bg-sky-100 dark:bg-slate-900 h-2">
+            <div id="global-progress-bar" class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full w-0 transition-all duration-500"></div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- 1. HALAMAN BERANDA -->
+        <section id="page-beranda" class="page-view block space-y-8 animate-fadeIn">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white p-8 sm:p-12 shadow-2xl shadow-sky-500/20">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-white/20 backdrop-blur-md text-white border border-white/30 uppercase tracking-wider">
+                        ✨ Media Pembelajaran Interaktif
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+                        Belajar Menuliskan Algoritma dengan Mudah!
+                    </h2>
+                    <p class="text-sky-100 text-base sm:text-lg leading-relaxed font-medium">
+                        Pseudocode adalah cara menuliskan langkah-langkah algoritma menggunakan bahasa sederhana dan terstruktur agar mudah dipahami oleh manusia.
+                    </p>
+                    <div class="pt-4 flex flex-wrap gap-3">
+                        <button onclick="showPage('materi')" class="btn-ifp px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-2xl font-black text-base shadow-lg shadow-yellow-400/30 flex items-center space-x-2 transition-all">
+                            <i class="fa-solid fa-play"></i>
+                            <span>MULAI BELAJAR</span>
+                        </button>
+                        <button onclick="showPage('materi')" class="btn-ifp px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-bold text-base backdrop-blur-md border border-white/40 transition-all">
+                            LIHAT MATERI
+                        </button>
+                        <button onclick="showPage('kuis')" class="btn-ifp px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-500/30 transition-all">
+                            COBA KUIS
+                        </button>
+                    </div>
+                </div>
+                <!-- Background Graphic Element -->
+                <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none hidden md:block">
+                    <i class="fa-solid fa-laptop-code text-[280px]"></i>
+                </div>
+            </div>
+
+            <!-- Quick Action Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div onclick="showPage('materi')" class="touch-card cursor-pointer p-6 rounded-3xl bg-white dark:bg-slate-800 border border-sky-100 dark:border-slate-700 shadow-xl shadow-sky-100/50 dark:shadow-none space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-400 flex items-center justify-center text-2xl font-bold">
+                        📖
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white">Pelajari Materi</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Pahami konsep dasar, fungsi, struktur, BEGIN-END, hingga INPUT-OUTPUT.</p>
+                </div>
+
+                <div onclick="showPage('contoh')" class="touch-card cursor-pointer p-6 rounded-3xl bg-white dark:bg-slate-800 border border-purple-100 dark:border-slate-700 shadow-xl shadow-purple-100/50 dark:shadow-none space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl font-bold">
+                        💡
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white">Lihat Contoh</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Lihat contoh nyata pseudocode lengkap dengan animasi jalannya program.</p>
+                </div>
+
+                <div onclick="showPage('simulasi')" class="touch-card cursor-pointer p-6 rounded-3xl bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 shadow-xl shadow-emerald-100/50 dark:shadow-none space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold">
+                        🧩
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white">Coba Simulasi</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Gunakan Pseudocode Runner untuk menguji algoritma buatanmu secara langsung.</p>
+                </div>
+
+                <div onclick="showPage('kuis')" class="touch-card cursor-pointer p-6 rounded-3xl bg-white dark:bg-slate-800 border border-amber-100 dark:border-slate-700 shadow-xl shadow-amber-100/50 dark:shadow-none space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
+                        🎯
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white">Uji Pemahaman</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Uji pengetahuanmu melalui kuis interaktif 15 soal dan dapatkan sertifikat!</p>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Box -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 shadow-lg space-y-4">
+                <h3 class="text-xl font-black text-slate-800 dark:text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-bullseye text-sky-500"></i>
+                    <span>Tujuan Pembelajaran (Informatika Kelas IX)</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600 dark:text-slate-300">
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i>
+                        <span>Memahami pengertian dan fungsi pseudocode dalam pemrograman.</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i>
+                        <span>Membedakan antara algoritma kalimat deskriptif dan pseudocode.</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i>
+                        <span>Memahami struktur dasar pseudocode: BEGIN, INPUT, PROCESS, OUTPUT, END.</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fa-solid fa-circle-check text-emerald-500 mt-1"></i>
+                        <span>Mampu membaca dan menyusun pseudocode sederhana secara tepat.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. HALAMAN MATERI (6 MODUL) -->
+        <section id="page-materi" class="page-view hidden space-y-6">
+            <!-- Navigation Tabs for Modules -->
+            <div class="flex flex-wrap gap-2 p-2 bg-white dark:bg-slate-800 rounded-2xl border border-sky-100 dark:border-slate-700 shadow-sm overflow-x-auto">
+                <button onclick="loadModul(1)" id="mod-tab-1" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-sky-500 text-white shadow">Materi 1: Pengertian</button>
+                <button onclick="loadModul(2)" id="mod-tab-2" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Materi 2: Fungsi</button>
+                <button onclick="loadModul(3)" id="mod-tab-3" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Materi 3: Algoritma vs Pseudocode</button>
+                <button onclick="loadModul(4)" id="mod-tab-4" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Materi 4: Struktur Dasar</button>
+                <button onclick="loadModul(5)" id="mod-tab-5" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Materi 5: BEGIN & END</button>
+                <button onclick="loadModul(6)" id="mod-tab-6" class="mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Materi 6: INPUT & OUTPUT</button>
+            </div>
+
+            <!-- Material Card Container -->
+            <div id="materi-display-box" class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-sky-100 dark:border-slate-700 shadow-xl space-y-6">
+                <!-- Content injected dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN CONTOH -->
+        <section id="page-contoh" class="page-view hidden space-y-6">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-6 text-white shadow-xl">
+                <h2 class="text-2xl font-black">💡 Contoh-Contoh Pseudocode</h2>
+                <p class="text-purple-100 text-sm mt-1">Klik tombol <b>▶ JALANKAN</b> pada setiap contoh untuk melihat simulasi eksekusi baris demi baris!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Contoh 1 -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-sky-100 dark:border-slate-700 shadow-lg space-y-4">
+                    <h3 class="font-extrabold text-lg text-slate-800 dark:text-white flex items-center justify-between">
+                        <span>Contoh 1 — Menampilkan Nama</span>
+                        <span class="px-2.5 py-1 bg-sky-100 dark:bg-sky-900/50 text-sky-600 dark:text-sky-300 text-xs rounded-full">Sederhana</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Menerima masukan sebuah nama, kemudian menampilkan nama tersebut kembali ke layar.</p>
+                    <div id="demo-code-1" class="bg-slate-900 p-4 rounded-2xl font-mono text-xs text-sky-300 space-y-1">
+                        <div id="demo1-line1">BEGIN</div>
+                        <div id="demo1-line2" class="pl-4">INPUT nama</div>
+                        <div id="demo1-line3" class="pl-4">OUTPUT nama</div>
+                        <div id="demo1-line4">END</div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="runDemo(1)" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>▶ JALANKAN</span>
+                        </button>
+                        <div id="demo1-output" class="text-xs font-bold text-amber-500">Output: -</div>
+                    </div>
+                </div>
+
+                <!-- Contoh 2 (Lengkap) -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-sky-100 dark:border-slate-700 shadow-lg space-y-4">
+                    <h3 class="font-extrabold text-lg text-slate-800 dark:text-white flex items-center justify-between">
+                        <span>Contoh 2 — Menghitung Luas Persegi</span>
+                        <span class="px-2.5 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 text-xs rounded-full">Perhitungan</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Menerima masukan panjang sisi, menghitung luas persegi, lalu menampilkan hasilnya.</p>
+                    <div id="demo-code-2" class="bg-slate-900 p-4 rounded-2xl font-mono text-xs text-sky-300 space-y-1">
+                        <div id="demo2-line1">BEGIN</div>
+                        <div id="demo2-line2" class="pl-4">INPUT sisi</div>
+                        <div id="demo2-line3" class="pl-4">luas ← sisi * sisi</div>
+                        <div id="demo2-line4" class="pl-4">OUTPUT luas</div>
+                        <div id="demo2-line5">END</div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="runDemo(2)" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>▶ JALANKAN</span>
+                        </button>
+                        <div id="demo2-output" class="text-xs font-bold text-amber-500">Output: -</div>
+                    </div>
+                </div>
+
+                <!-- Contoh 3 -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-sky-100 dark:border-slate-700 shadow-lg space-y-4">
+                    <h3 class="font-extrabold text-lg text-slate-800 dark:text-white flex items-center justify-between">
+                        <span>Contoh 3 — Menghitung Penjumlahan</span>
+                        <span class="px-2.5 py-1 bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-300 text-xs rounded-full">Aritmatika</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Menerima dua angka masukan, menjumlahkannya, dan menampilkan hasil penjumlahan.</p>
+                    <div id="demo-code-3" class="bg-slate-900 p-4 rounded-2xl font-mono text-xs text-sky-300 space-y-1">
+                        <div id="demo3-line1">BEGIN</div>
+                        <div id="demo3-line2" class="pl-4">INPUT a</div>
+                        <div id="demo3-line3" class="pl-4">INPUT b</div>
+                        <div id="demo3-line4" class="pl-4">hasil ← a + b</div>
+                        <div id="demo3-line5" class="pl-4">OUTPUT hasil</div>
+                        <div id="demo3-line6">END</div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="runDemo(3)" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>▶ JALANKAN</span>
+                        </button>
+                        <div id="demo3-output" class="text-xs font-bold text-amber-500">Output: -</div>
+                    </div>
+                </div>
+
+                <!-- Contoh 4 -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-sky-100 dark:border-slate-700 shadow-lg space-y-4">
+                    <h3 class="font-extrabold text-lg text-slate-800 dark:text-white flex items-center justify-between">
+                        <span>Contoh 4 — Menghitung Keliling Persegi Panjang</span>
+                        <span class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 text-xs rounded-full">Geometri</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Menerima masukan panjang dan lebar, lalu menghitung keliling bangun datar.</p>
+                    <div id="demo-code-4" class="bg-slate-900 p-4 rounded-2xl font-mono text-xs text-sky-300 space-y-1">
+                        <div id="demo4-line1">BEGIN</div>
+                        <div id="demo4-line2" class="pl-4">INPUT panjang</div>
+                        <div id="demo4-line3" class="pl-4">INPUT lebar</div>
+                        <div id="demo4-line4" class="pl-4">keliling ← 2 * (panjang + lebar)</div>
+                        <div id="demo4-line5" class="pl-4">OUTPUT keliling</div>
+                        <div id="demo4-line6">END</div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="runDemo(4)" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>▶ JALANKAN</span>
+                        </button>
+                        <div id="demo4-output" class="text-xs font-bold text-amber-500">Output: -</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. HALAMAN SIMULASI -->
+        <section id="page-simulasi" class="page-view hidden space-y-6">
+            <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-2xl space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-sky-400 flex items-center space-x-2">
+                            <i class="fa-solid fa-terminal"></i>
+                            <span>Pseudocode Runner (Simulator Code)</span>
+                        </h2>
+                        <p class="text-xs text-slate-400">Uji coba penulisan pseudocode kamu pada editor di bawah ini.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="runSimulasi()" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-500/30 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-play"></i>
+                            <span>▶ JALANKAN</span>
+                        </button>
+                        <button onclick="resetSimulasi()" class="btn-ifp px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700">
+                            🔄 RESET
+                        </button>
+                        <button onclick="petunjukSimulasi()" class="btn-ifp px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold">
+                            💡 PETUNJUK
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Code Editor Box -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-mono text-sky-400 uppercase tracking-wider block font-bold">Editor Pseudocode:</label>
+                        <textarea id="sim-editor" class="w-full h-64 p-4 bg-slate-950 text-sky-300 font-mono text-xs rounded-2xl border border-slate-800 focus:outline-none focus:border-sky-500 leading-relaxed resize-none">BEGIN
+INPUT nama
+OUTPUT nama
+END</textarea>
+                    </div>
+
+                    <!-- Console & Output Box -->
+                    <div class="space-y-2 flex flex-col">
+                        <label class="text-xs font-mono text-emerald-400 uppercase tracking-wider block font-bold">Console Terminal Output:</label>
+                        <div id="sim-console" class="flex-grow min-h-[16rem] p-4 bg-slate-950 text-emerald-400 font-mono text-xs rounded-2xl border border-slate-800 leading-relaxed overflow-y-auto">
+                            <p class="text-slate-500">// Klik ▶ JALANKAN untuk memulai simulasi...</p>
+                        </div>
+
+                        <!-- Interactive Input Form Modal (Dynamic) -->
+                        <div id="sim-input-box" class="hidden p-4 bg-slate-800 rounded-2xl border border-sky-500/40 space-y-3">
+                            <span class="text-xs text-sky-300 font-mono font-bold block">> Program membutuhkan data masukan (INPUT):</span>
+                            <div class="flex gap-2">
+                                <input type="text" id="sim-input-value" class="flex-grow p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-mono focus:outline-none" placeholder="Masukkan nilai...">
+                                <button onclick="submitSimInput()" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold rounded-xl">
+                                    KIRIM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. HALAMAN GAME -->
+        <section id="page-game" class="page-view hidden space-y-6">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-sky-100 dark:border-slate-700 shadow-xl space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-sky-100 dark:border-slate-700 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white flex items-center space-x-2">
+                            <span>🧩 Game — Susun Pseudocode</span>
+                        </h2>
+                        <p class="text-xs text-slate-500">Klik/Sentuh potongan baris kode di kiri untuk memindahkannya ke area urutan yang benar di kanan!</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs font-bold text-slate-400">SKOR GAME:</span>
+                        <span id="game-score" class="text-2xl font-black text-amber-500">0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Source Potongan Kode -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm">Potongan Kode (Diacak):</h4>
+                        <div id="game-source-container" class="p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-700 min-h-[16rem] space-y-2">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
+
+                    <!-- Target Urutan Jawaban -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-slate-700 dark:text-slate-300 text-sm">Urutan Pseudocode Kamu:</h4>
+                        <div id="game-target-container" class="p-4 bg-emerald-50/50 dark:bg-slate-900 rounded-2xl border border-emerald-200 dark:border-slate-700 min-h-[16rem] space-y-2">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-sky-100 dark:border-slate-700">
+                    <button onclick="resetGame()" class="btn-ifp px-5 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold">
+                        🔄 ACAK ULANG
+                    </button>
+                    <button onclick="checkGameOrder()" class="btn-ifp px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white font-black text-sm rounded-2xl shadow-lg shadow-emerald-500/30">
+                        PERIKSA URUTAN <i class="fa-solid fa-check ml-1"></i>
+                    </button>
+                </div>
+
+                <div id="game-feedback" class="hidden"></div>
+            </div>
+        </section>
+
+        <!-- 6. HALAMAN LATIHAN -->
+        <section id="page-latihan" class="page-view hidden space-y-6">
+            <div class="bg-gradient-to-r from-sky-500 to-indigo-600 rounded-3xl p-6 text-white shadow-xl">
+                <h2 class="text-2xl font-black">📝 Soal Latihan Formatif</h2>
+                <p class="text-sky-100 text-sm mt-1">Uji kemampuan pemahamanmu dengan 10 soal formatif interaktif berikut.</p>
+            </div>
+
+            <div id="latihan-questions-container" class="space-y-6">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 7. HALAMAN KUIS -->
+        <section id="page-kuis" class="page-view hidden space-y-6">
+            <!-- Start Quiz Registration Box -->
+            <div id="kuis-start-card" class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-sky-100 dark:border-slate-700 shadow-xl max-w-xl mx-auto text-center space-y-6">
+                <div class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto font-bold shadow-md">
+                    🎯
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white">Kuis Akhir Pseudocode</h2>
+                    <p class="text-xs text-slate-500">Kuis terdiri dari 15 soal pilihan ganda. Isikan namamu untuk memulai!</p>
+                </div>
+
+                <div class="space-y-2 text-left">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nama Lengkap Siswa:</label>
+                    <input type="text" id="student-name-input" class="w-full px-4 py-3 bg-sky-50 dark:bg-slate-900 border border-sky-200 dark:border-slate-700 rounded-2xl font-bold text-slate-800 dark:text-white focus:outline-none focus:border-sky-500" placeholder="Ketik nama lengkapmu di sini...">
+                </div>
+
+                <button onclick="startQuiz()" class="btn-ifp w-full py-4 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-black text-lg rounded-2xl shadow-xl shadow-sky-500/30">
+                    MULAI KUIS SEKARANG
+                </button>
+            </div>
+
+            <!-- Active Quiz Window -->
+            <div id="kuis-active-card" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 border border-sky-100 dark:border-slate-700 shadow-xl space-y-6">
+                <!-- Quiz Header -->
+                <div class="flex items-center justify-between border-b border-sky-100 dark:border-slate-700 pb-4">
+                    <div>
+                        <span id="quiz-progress-text" class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">Soal 1 dari 15</span>
+                        <h3 id="quiz-student-display" class="text-sm font-extrabold text-slate-700 dark:text-slate-200">Siswa: -</h3>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 block font-semibold">SKOR SEMENTARA</span>
+                        <span id="quiz-live-score" class="text-xl font-black text-emerald-500">0</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Question Content -->
+                <div class="space-y-4">
+                    <h3 id="quiz-question-title" class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white leading-snug">
+                        <!-- Question text -->
+                    </h3>
+
+                    <!-- Quiz Options Container -->
+                    <div id="quiz-options-box" class="grid grid-cols-1 gap-3">
+                        <!-- Injected JS -->
+                    </div>
+                </div>
+
+                <!-- Quiz Footer Buttons -->
+                <div class="flex justify-end pt-4 border-t border-sky-100 dark:border-slate-700">
+                    <button id="quiz-next-btn" onclick="nextQuizStep()" class="hidden btn-ifp px-8 py-3 bg-sky-500 hover:bg-sky-400 text-white font-black text-base rounded-2xl shadow-lg shadow-sky-500/30">
+                        SOAL BERIKUTNYA <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. HALAMAN HASIL KUIS & SERTIFIKAT -->
+        <section id="page-hasil" class="page-view hidden space-y-6">
+            <div id="no-result-msg" class="bg-white dark:bg-slate-800 rounded-3xl p-12 text-center border border-sky-100 dark:border-slate-700 shadow-xl space-y-4">
+                <i class="fa-solid fa-clipboard-question text-6xl text-sky-300"></i>
+                <h3 class="text-xl font-bold text-slate-700 dark:text-slate-200">Belum Ada Hasil Kuis</h3>
+                <p class="text-slate-500 text-sm">Kamu belum menyelesaikan Kuis Akhir. Selesaikan kuis terlebih dahulu untuk melihat hasil dan sertifikatmu!</p>
+                <button onclick="showPage('kuis')" class="btn-ifp px-6 py-3 bg-sky-500 text-white rounded-2xl font-bold">KERJAKAN KUIS</button>
+            </div>
+
+            <!-- Result Card -->
+            <div id="result-card" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-8 border border-sky-100 dark:border-slate-700 shadow-2xl space-y-8 max-w-3xl mx-auto">
+                <div class="text-center space-y-3">
+                    <span id="result-badge" class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-700">
+                        🌟 Sangat Baik
+                    </span>
+                    <h2 class="text-3xl font-black text-slate-800 dark:text-white">🎉 HASIL KUIS AKHIR</h2>
+                    <p id="result-student-name" class="text-lg font-bold text-sky-600 dark:text-sky-400">Nama Siswa</p>
+                </div>
+
+                <!-- Score Breakdown Grid -->
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-700">
+                        <span class="text-xs text-slate-400 font-bold block">SKOR TOTAL</span>
+                        <span id="res-score" class="text-3xl font-black text-sky-600 dark:text-sky-400">85/100</span>
+                    </div>
+                    <div class="p-4 bg-emerald-50 dark:bg-slate-900 rounded-2xl border border-emerald-100 dark:border-slate-700">
+                        <span class="text-xs text-slate-400 font-bold block">BENAR</span>
+                        <span id="res-correct" class="text-3xl font-black text-emerald-500">13</span>
+                    </div>
+                    <div class="p-4 bg-rose-50 dark:bg-slate-900 rounded-2xl border border-rose-100 dark:border-slate-700">
+                        <span class="text-xs text-slate-400 font-bold block">SALAH</span>
+                        <span id="res-wrong" class="text-3xl font-black text-rose-500">2</span>
+                    </div>
+                </div>
+
+                <!-- Certificate Digital Preview -->
+                <div class="border-4 border-double border-amber-400 p-6 rounded-3xl bg-gradient-to-b from-amber-50/50 to-amber-100/30 dark:from-slate-900 dark:to-slate-900 text-center space-y-4 relative overflow-hidden">
+                    <div class="text-amber-500 font-bold text-xs uppercase tracking-widest">SERTIFIKAT KELULUSAN DIGITAL</div>
+                    <h3 class="text-xl font-extrabold text-slate-800 dark:text-amber-300">MEDIA PEMBELAJARAN PSEUDOCODE</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400">Diberikan kepada:</p>
+                    <h4 id="cert-student-name" class="text-2xl font-black text-sky-700 dark:text-sky-300 underline">NAMA SISWA</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                        Telah berhasil menguasai materi Dasar Algoritma & Pseudocode pada mata pelajaran Informatika Kelas IX SMP.
+                    </p>
+                    <div class="text-[10px] text-slate-400 pt-2">Terverifikasi Sistem Pembelajaran Interaktif</div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="showPage('kuis')" class="btn-ifp px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-2xl shadow-lg">
+                        🔄 ULANGI KUIS
+                    </button>
+                    <button onclick="showPage('beranda')" class="btn-ifp px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-2xl">
+                        🏠 KEMBALI KE BERANDA
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let currentPage = 'beranda';
+        let audioEnabled = true;
+        let userProgress = {
+            materiUnlocked: [1],
+            gameScore: 0,
+            latihanScore: 0,
+            quizCompleted: false,
+            quizScore: 0,
+            studentName: ''
+        };
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('audio-icon');
+            icon.className = audioEnabled ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark text-rose-500";
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function showPage(pageId) {
+            playSound('click');
+            currentPage = pageId;
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all";
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.className = "nav-btn px-3.5 py-2 text-sm font-bold rounded-xl text-sky-700 dark:text-sky-300 bg-white dark:bg-slate-800 shadow-sm transition-all";
+            }
+
+            if (pageId === 'materi') loadModul(1);
+            if (pageId === 'game') initGame();
+            if (pageId === 'latihan') initLatihan();
+            if (pageId === 'hasil') checkAndRenderResult();
+        }
+
+        const modulData = {
+            1: {
+                title: "MATERI 1 — Apa Itu Pseudocode?",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <b>Pseudocode</b> (dibaca: <i>soo-doh-kohd</i>) berasal dari kata <i>pseudo</i> (semu/tiruan) dan <i>code</i> (kode program). Pseudocode adalah cara menuliskan algoritma menggunakan bahasa manusia yang sederhana dan terstruktur menyerupai kode pemrograman sebenarnya.
+                        </p>
+                        <div class="p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-700 space-y-2">
+                            <h4 class="font-bold text-sky-800 dark:text-sky-300 text-sm">Contoh Kasus: Menghitung Luas Persegi</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                                <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border">
+                                    <span class="font-bold text-slate-400 block mb-1">Algoritma Kalimat:</span>
+                                    1. Masukkan panjang sisi.<br>
+                                    2. Hitung luas = sisi × sisi.<br>
+                                    3. Tampilkan luas.
+                                </div>
+                                <div class="bg-slate-900 text-sky-300 p-3 rounded-xl border">
+                                    <span class="font-bold text-amber-400 block mb-1">Pseudocode:</span>
+                                    BEGIN<br>
+                                    &nbsp;&nbsp;INPUT sisi<br>
+                                    &nbsp;&nbsp;luas ← sisi * sisi<br>
+                                    &nbsp;&nbsp;OUTPUT luas<br>
+                                    END
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="runVisualizerModul1()" class="btn-ifp px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-sm shadow-md">
+                                💡 Lihat Cara Kerjanya (Animasi Step-by-Step)
+                            </button>
+                        </div>
+                        <div id="mod1-step-box" class="hidden p-4 bg-slate-900 text-emerald-400 rounded-2xl font-mono text-xs space-y-1"></div>
+                    </div>
+                `
+            },
+            2: {
+                title: "MATERI 2 — Fungsi Pseudocode",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-slate-600 dark:text-slate-300 text-sm">Pseudocode memiliki beberapa fungsi utama dalam pengembangan perangkat lunak:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-700 space-y-1">
+                                <h4 class="font-bold text-sky-700 dark:text-sky-300 text-sm">1. Merancang Algoritma</h4>
+                                <p class="text-xs text-slate-500">Membantu menyusun urutan logika berpikir sebelum membuat program.</p>
+                            </div>
+                            <div class="p-4 bg-purple-50 dark:bg-slate-900 rounded-2xl border border-purple-100 dark:border-slate-700 space-y-1">
+                                <h4 class="font-bold text-purple-700 dark:text-purple-300 text-sm">2. Menjelaskan Langkah</h4>
+                                <p class="text-xs text-slate-500">Memudahkan penyampaian alur penyelesaian masalah secara terstruktur.</p>
+                            </div>
+                            <div class="p-4 bg-emerald-50 dark:bg-slate-900 rounded-2xl border border-emerald-100 dark:border-slate-700 space-y-1">
+                                <h4 class="font-bold text-emerald-700 dark:text-emerald-300 text-sm">3. Memudahkan Komunikasi</h4>
+                                <p class="text-xs text-slate-500">Menjadi jembatan komunikasi antar programmer maupun dengan non-programmer.</p>
+                            </div>
+                            <div class="p-4 bg-amber-50 dark:bg-slate-900 rounded-2xl border border-amber-100 dark:border-slate-700 space-y-1">
+                                <h4 class="font-bold text-amber-700 dark:text-amber-300 text-sm">4. Menemukan Kesalahan</h4>
+                                <p class="text-xs text-slate-500">Memudahkan pelacakan logika yang salah (bug) sebelum ditulis ke kode asli.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "MATERI 3 — Algoritma vs Pseudocode",
+                content: `
+                    <div class="space-y-4">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-sky-100 dark:bg-slate-700 text-sky-900 dark:text-sky-200">
+                                        <th class="p-3 rounded-l-xl">Aspek</th>
+                                        <th class="p-3">Algoritma Kalimat</th>
+                                        <th class="p-3 rounded-r-xl">Pseudocode</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 dark:divide-slate-700 text-xs">
+                                    <tr>
+                                        <td class="p-3 font-bold">Bahasa</td>
+                                        <td class="p-3">Bahasa sehari-hari penuh</td>
+                                        <td class="p-3 font-mono text-sky-600">Mirip struktur pemrograman</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold">Aturan</td>
+                                        <td class="p-3">Bebas & Fleksibel</td>
+                                        <td class="p-3 font-mono text-sky-600">Menggunakan kata kunci (BEGIN, INPUT, OUTPUT, END)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-4 bg-amber-50 dark:bg-slate-900 rounded-2xl border border-amber-200 dark:border-slate-700 space-y-3">
+                            <h4 class="font-bold text-amber-800 dark:text-amber-300 text-sm">❓ Kuis Cepat: Mana yang merupakan Pseudocode?</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <button onclick="checkMiniQuiz(false)" class="p-3 bg-white dark:bg-slate-800 border rounded-xl text-left text-xs">
+                                    <b>Option A:</b><br>Masukkan nama lalu tampilkan nama ke layar.
+                                </button>
+                                <button onclick="checkMiniQuiz(true)" class="p-3 bg-white dark:bg-slate-800 border rounded-xl text-left text-xs font-mono">
+                                    <b>Option B:</b><br>BEGIN<br>&nbsp;&nbsp;INPUT nama<br>&nbsp;&nbsp;OUTPUT nama<br>END
+                                </button>
+                            </div>
+                            <div id="mini-quiz-feedback" class="hidden text-xs font-bold"></div>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                title: "MATERI 4 — Struktur Dasar Pseudocode",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-slate-600 dark:text-slate-300">Klik setiap bagian diagram di bawah ini untuk melihat penjelasannya!</p>
+                        <div class="flex flex-col items-center space-y-2 max-w-sm mx-auto font-mono text-xs">
+                            <div onclick="showDiagramDetail('BEGIN')" class="w-full p-3 bg-sky-500 text-white text-center font-bold rounded-xl cursor-pointer hover:scale-105 transition-all shadow">BEGIN</div>
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <div onclick="showDiagramDetail('INPUT')" class="w-full p-3 bg-indigo-500 text-white text-center font-bold rounded-xl cursor-pointer hover:scale-105 transition-all shadow">INPUT</div>
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <div onclick="showDiagramDetail('PROCESS')" class="w-full p-3 bg-purple-500 text-white text-center font-bold rounded-xl cursor-pointer hover:scale-105 transition-all shadow">PROCESS (Perhitungan)</div>
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <div onclick="showDiagramDetail('OUTPUT')" class="w-full p-3 bg-emerald-500 text-white text-center font-bold rounded-xl cursor-pointer hover:scale-105 transition-all shadow">OUTPUT</div>
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <div onclick="showDiagramDetail('END')" class="w-full p-3 bg-rose-500 text-white text-center font-bold rounded-xl cursor-pointer hover:scale-105 transition-all shadow">END</div>
+                        </div>
+                        <div id="diagram-detail-box" class="p-4 bg-sky-50 dark:bg-slate-900 rounded-2xl border border-sky-100 dark:border-slate-700 text-xs font-bold text-sky-800 dark:text-sky-300 text-center">
+                            Pilih salah satu bagian diagram di atas!
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "MATERI 5 — BEGIN dan END",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-slate-600 dark:text-slate-300">
+                            Setiap algoritma pseudocode wajib diawali dengan <b>BEGIN</b> (awal) dan diakhiri dengan <b>END</b> (akhir).
+                        </p>
+                        <div class="p-4 bg-slate-900 text-sky-300 rounded-2xl font-mono text-xs space-y-1">
+                            <div><b class="text-yellow-400">BEGIN</b>  ← Menandai program dimulai</div>
+                            <div class="pl-4">OUTPUT "Halo!"</div>
+                            <div><b class="text-rose-400">END</b>    ← Menandai program selesai</div>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="runBeginEndDemo()" class="btn-ifp px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-slate-900 rounded-2xl font-bold text-xs">
+                                🚀 Klik untuk Simulasikan Program BEGIN - END
+                            </button>
+                        </div>
+                        <div id="begin-end-output" class="hidden p-3 bg-emerald-100 text-emerald-800 font-bold rounded-xl text-xs"></div>
+                    </div>
+                `
+            },
+            6: {
+                title: "MATERI 6 — INPUT dan OUTPUT",
+                content: `
+                    <div class="space-y-4">
+                        <p class="text-sm text-slate-600 dark:text-slate-300">
+                            <b>INPUT</b> digunakan untuk menerima data dari pengguna, sedangkan <b>OUTPUT</b> digunakan untuk menampilkan hasil data ke layar.
+                        </p>
+                        <div class="p-6 bg-slate-900 text-white rounded-3xl space-y-4">
+                            <h4 class="font-bold text-sky-400 text-sm">Simulasi Interaktif INPUT & OUTPUT:</h4>
+                            <div class="space-y-2 text-xs">
+                                <label class="text-slate-400">Masukkan Namamu (INPUT):</label>
+                                <input type="text" id="sandbox-name-input" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white font-mono focus:outline-none focus:border-sky-500" placeholder="Ketik nama di sini...">
+                            </div>
+                            <button onclick="runSandboxIO()" class="btn-ifp px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-xs font-bold">
+                                JALANKAN PROGRAM (OUTPUT)
+                            </button>
+                            <div id="sandbox-output-box" class="hidden p-3 bg-slate-950 border border-emerald-500/50 rounded-xl text-emerald-400 font-mono text-xs"></div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        function loadModul(id) {
+            playSound('click');
+            const data = modulData[id];
+            if (!data) return;
+
+            document.querySelectorAll('.mod-btn').forEach((btn, idx) => {
+                if (idx + 1 === id) {
+                    btn.className = "mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-sky-500 text-white shadow";
+                } else {
+                    btn.className = "mod-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300";
+                }
+            });
+
+            const box = document.getElementById('materi-display-box');
+            box.innerHTML = `
+                <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white border-b border-sky-100 dark:border-slate-700 pb-3">${data.title}</h2>
+                ${data.content}
+            `;
+            updateGlobalProgress();
+        }
+
+        function runVisualizerModul1() {
+            playSound('click');
+            const box = document.getElementById('mod1-step-box');
+            box.classList.remove('hidden');
+            box.innerHTML = "Memulai eksekusi...";
+            
+            const steps = [
+                "1. [BEGIN] Program diinisialisasi.",
+                "2. [INPUT sisi] Menerima data masukan sisi = 5.",
+                "3. [PROCESS] Menghitung luas ← 5 × 5 = 25.",
+                "4. [OUTPUT luas] Menampilkan hasil 25 ke layar.",
+                "5. [END] Program selesai dilaksanakan."
+            ];
+
+            let idx = 0;
+            const timer = setInterval(() => {
+                if (idx < steps.length) {
+                    box.innerHTML += `<br>${steps[idx]}`;
+                    idx++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 600);
+        }
+
+        function checkMiniQuiz(isCorrect) {
+            const fb = document.getElementById('mini-quiz-feedback');
+            fb.classList.remove('hidden');
+            if (isCorrect) {
+                playSound('correct');
+                fb.className = "p-3 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold";
+                fb.innerHTML = "✅ BENAR! Option B menggunakan struktur baku kata kunci (BEGIN, INPUT, OUTPUT, END).";
+            } else {
+                playSound('wrong');
+                fb.className = "p-3 rounded-xl bg-rose-100 text-rose-800 text-xs font-bold";
+                fb.innerHTML = "❌ BELUM TEPAT. Option A adalah algoritma bahasa kalimat deskriptif biasa.";
+            }
+        }
+
+        function showDiagramDetail(part) {
+            playSound('click');
+            const box = document.getElementById('diagram-detail-box');
+            const details = {
+                'BEGIN': 'BEGIN: Kata kunci wajib untuk menandai awal mula jalannya algoritma.',
+                'INPUT': 'INPUT: Digunakan untuk menerima data masukan dari pengguna/perangkat.',
+                'PROCESS': 'PROCESS: Menjalankan perhitungan aritmatika atau manipulasi data.',
+                'OUTPUT': 'OUTPUT: Menampilkan hasil informasi keluaran ke layar.',
+                'END': 'END: Kata kunci penutup yang menandai akhir dari algoritma.'
+            };
+            box.innerHTML = details[part];
+        }
+
+        function runBeginEndDemo() {
+            playSound('correct');
+            const out = document.getElementById('begin-end-output');
+            out.classList.remove('hidden');
+            out.innerHTML = "▶ Program berjalan: Menampilkan 'Halo!' di layar lalu berhenti (END).";
+        }
+
+        function runSandboxIO() {
+            const name = document.getElementById('sandbox-name-input').value.trim() || "Siswa Class IX";
+            playSound('correct');
+            const box = document.getElementById('sandbox-output-box');
+            box.classList.remove('hidden');
+            box.innerHTML = `> Halo, ${name}! Selamat belajar pseudocode.`;
+        }
+
+        function runDemo(id) {
+            playSound('click');
+            const linesCount = { 1: 4, 2: 5, 3: 6, 4: 6 };
+            const outputs = {
+                1: 'Output: "Andi"',
+                2: 'Output: 25',
+                3: 'Output: 15',
+                4: 'Output: 30'
+            };
+
+            let curLine = 1;
+            const total = linesCount[id];
+
+            const interval = setInterval(() => {
+                for (let i = 1; i <= total; i++) {
+                    const el = document.getElementById(`demo${id}-line${i}`);
+                    if (el) el.classList.remove('active-line');
+                }
+                const activeEl = document.getElementById(`demo${id}-line${curLine}`);
+                if (activeEl) activeEl.classList.add('active-line');
+
+                curLine++;
+                if (curLine > total) {
+                    clearInterval(interval);
+                    playSound('correct');
+                    document.getElementById(`demo${id}-output`).innerText = outputs[id];
+                }
+            }, 500);
+        }
+
+        function runSimulasi() {
+            playSound('click');
+            const code = document.getElementById('sim-editor').value;
+            const consoleBox = document.getElementById('sim-console');
+            consoleBox.innerHTML = "> Membaca pseudocode...";
+
+            const lines = code.split('\n');
+            let hasInput = false;
+
+            lines.forEach(l => {
+                const line = l.trim();
+                if (line.startsWith('INPUT')) {
+                    hasInput = true;
+                }
+            });
+
+            if (hasInput) {
+                document.getElementById('sim-input-box').classList.remove('hidden');
+                consoleBox.innerHTML += "<br>> Menunggu masukan pengguna (INPUT)...";
+            } else {
+                playSound('correct');
+                consoleBox.innerHTML += "<br>> Program Selesai Dieksekusi Tanpa Error!";
+            }
+        }
+
+        function submitSimInput() {
+            const val = document.getElementById('sim-input-value').value || "Data";
+            playSound('correct');
+            document.getElementById('sim-input-box').classList.add('hidden');
+            const consoleBox = document.getElementById('sim-console');
+            consoleBox.innerHTML += `<br>> Input Diterima: "${val}"`;
+            consoleBox.innerHTML += `<br>> Output: "${val}"`;
+            consoleBox.innerHTML += `<br>> Program Selesai Dieksekusi (END).`;
+        }
+
+        function resetSimulasi() {
+            playSound('click');
+            document.getElementById('sim-editor').value = "BEGIN\nINPUT nama\nOUTPUT nama\nEND";
+            document.getElementById('sim-console').innerHTML = '<p class="text-slate-500">// Klik ▶ JALANKAN untuk memulai simulasi...</p>';
+            document.getElementById('sim-input-box').classList.add('hidden');
+        }
+
+        function petunjukSimulasi() {
+            alert("Petunjuk Pseudocode Runner:\n1. Tuliskan baris pseudocode dengan kata kunci BEGIN, INPUT, OUTPUT, dan END.\n2. Tekan JALANKAN untuk melihat simulasi alur program.");
+        }
+
+        const initialGameItems = [
+            { id: 'item-1', text: 'END' },
+            { id: 'item-2', text: 'OUTPUT luas' },
+            { id: 'item-3', text: 'INPUT sisi' },
+            { id: 'item-4', text: 'BEGIN' },
+            { id: 'item-5', text: 'luas ← sisi × sisi' }
+        ];
+        let gameSource = [];
+        let gameTarget = [];
+
+        function initGame() {
+            gameSource = [...initialGameItems];
+            gameTarget = [];
+            renderGame();
+        }
+
+        function renderGame() {
+            const srcBox = document.getElementById('game-source-container');
+            const tgtBox = document.getElementById('game-target-container');
+
+            srcBox.innerHTML = '';
+            tgtBox.innerHTML = '';
+
+            gameSource.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-white dark:bg-slate-800 border rounded-xl font-mono text-xs font-bold text-sky-600 shadow-sm cursor-pointer hover:bg-sky-50";
+                div.innerText = item.text;
+                div.onclick = () => moveToTarget(idx);
+                srcBox.appendChild(div);
+            });
+
+            gameTarget.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-emerald-100 dark:bg-slate-800 border border-emerald-300 rounded-xl font-mono text-xs font-bold text-emerald-800 dark:text-emerald-300 shadow-sm cursor-pointer";
+                div.innerText = item.text;
+                div.onclick = () => moveToSource(idx);
+                tgtBox.appendChild(div);
+            });
+        }
+
+        function moveToTarget(idx) {
+            playSound('click');
+            const item = gameSource.splice(idx, 1)[0];
+            gameTarget.push(item);
+            renderGame();
+        }
+
+        function moveToSource(idx) {
+            playSound('click');
+            const item = gameTarget.splice(idx, 1)[0];
+            gameSource.push(item);
+            renderGame();
+        }
+
+        function checkGameOrder() {
+            const correctOrder = ['BEGIN', 'INPUT sisi', 'luas ← sisi × sisi', 'OUTPUT luas', 'END'];
+            const userOrder = gameTarget.map(i => i.text);
+
+            const isCorrect = userOrder.length === 5 && userOrder.every((v, i) => v === correctOrder[i]);
+            const fb = document.getElementById('game-feedback');
+            fb.classList.remove('hidden');
+
+            if (isCorrect) {
+                playSound('correct');
+                confetti();
+                fb.className = "p-4 rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-sm text-center";
+                fb.innerText = "🎉 HEBAT! Urutan pseudocode kamu benar sempurna.";
+                document.getElementById('game-score').innerText = "100";
+            } else {
+                playSound('wrong');
+                fb.className = "p-4 rounded-2xl bg-rose-100 text-rose-800 font-bold text-sm text-center";
+                fb.innerText = "💡 Coba periksa kembali urutan langkahnya dari BEGIN hingga END.";
+            }
+        }
+
+        function resetGame() {
+            playSound('click');
+            document.getElementById('game-feedback').classList.add('hidden');
+            initGame();
+        }
+
+        const latihanData = [
+            { q: "1. Pseudocode merupakan cara menuliskan algoritma menggunakan bahasa yang menyerupai...", opts: ["Bahasa Pemrograman", "Bahasa Isyarat", "Bahasa Mesin Binary", "Gambar Saja"], ans: 0, exp: "Pseudocode ditulis menyerupai struktur kode pemrograman agar mudah dipahami manusia." },
+            { q: "2. Kata kunci yang digunakan untuk menandai awal mula algoritma pseudocode adalah...", opts: ["START", "BEGIN", "OPEN", "INIT"], ans: 1, exp: "BEGIN secara umum digunakan untuk menandai awal mula algoritma." },
+            { q: "3. Manakah perintah yang digunakan untuk menerima data masukan dari pengguna?", opts: ["OUTPUT", "PRINT", "INPUT", "WRITE"], ans: 2, exp: "INPUT digunakan untuk menerima data masukan." },
+            { q: "4. Perintah OUTPUT berguna untuk...", opts: ["Menerima data", "Menampilkan hasil", "Mengapus variabel", "Mengakhiri kode"], ans: 1, exp: "OUTPUT berfungsi menampilkan informasi hasil keluaran." },
+            { q: "5. Akhir dari suatu algoritma pseudocode ditandai dengan kata kunci...", opts: ["FINISH", "STOP", "END", "EXIT"], ans: 2, exp: "END menandai penutupan batas algoritma." },
+            { q: "6. Simbol panah '←' dalam baris pseudocode 'luas ← sisi * sisi' berarti...", opts: ["Pemberian nilai (Assignment)", "Lebih kecil dari", "Sama dengan perbandingan", "Pengurangan"], ans: 0, exp: "Panah kearah kiri menunjukkan proses perhitungan/pemberian nilai ke variabel." },
+            { q: "7. Benar atau Salah: Pseudocode harus memiliki aturan titik koma yang sangat kaku seperti bahasa pemrograman asli.", opts: ["Benar", "Salah"], ans: 1, exp: "Pseudocode bersifat fleksibel dan tidak kaku dalam sintaks dibanding bahasa pemrograman asli." },
+            { q: "8. Manakah urutan struktur dasar pseudocode yang tepat?", opts: ["END -> PROCESS -> BEGIN", "BEGIN -> INPUT -> PROCESS -> OUTPUT -> END", "INPUT -> BEGIN -> END", "OUTPUT -> PROCESS -> INPUT"], ans: 1, exp: "Urutan logis adalah BEGIN, INPUT, PROCESS, OUTPUT, END." },
+            { q: "9. Apa kegunaan utama dari pseudocode bagi seorang programmer?", opts: ["Membuat komputer berjalan cepat", "Merancang alur logika sebelum menulis kode asli", "Mengganti fungsi harddisk", "Menghapus bug otomatis"], ans: 1, exp: "Pseudocode menjadi cetak biru perancangan logika sebelum koding." },
+            { q: "10. Baris perintah: OUTPUT 'Halo' akan menghasilkan keluaran berupa...", opts: ["Input angka", "Teks 'Halo' di layar", "Error", "Proses matematika"], ans: 1, exp: "Perintah OUTPUT menampilkan nilai atau teks yang diberikan." }
+        ];
+
+        function initLatihan() {
+            const container = document.getElementById('latihan-questions-container');
+            container.innerHTML = '';
+
+            latihanData.forEach((q, qIdx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 p-6 rounded-3xl border border-sky-100 dark:border-slate-700 shadow-md space-y-3";
+                
+                let optionsHtml = '';
+                q.opts.forEach((opt, oIdx) => {
+                    optionsHtml += `
+                        <button onclick="answerLatihan(${qIdx}, ${oIdx})" id="lat-${qIdx}-opt-${oIdx}" class="w-full text-left p-3 rounded-xl border border-sky-100 dark:border-slate-700 text-xs font-semibold hover:bg-sky-50 dark:hover:bg-slate-700 transition-all">
+                            ${opt}
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm">${q.q}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${optionsHtml}</div>
+                    <div id="lat-fb-${qIdx}" class="hidden p-3 rounded-xl text-xs font-bold"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function answerLatihan(qIdx, oIdx) {
+            const q = latihanData[qIdx];
+            const fb = document.getElementById(`lat-fb-${qIdx}`);
+            fb.classList.remove('hidden');
+
+            if (oIdx === q.ans) {
+                playSound('correct');
+                fb.className = "p-3 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold";
+                fb.innerHTML = `✅ BENAR! ${q.exp}`;
+            } else {
+                playSound('wrong');
+                fb.className = "p-3 rounded-xl bg-rose-100 text-rose-800 text-xs font-bold";
+                fb.innerHTML = `❌ BELUM TEPAT! ${q.exp}`;
+            }
+        }
+
+        const quizData = [
+            { q: "1. Apa pengertian paling tepat dari pseudocode?", opts: ["Kode biner komputer", "Cara menuliskan algoritma menggunakan bahasa sederhana menyerupai kode pemrograman", "Bahasa Inggris formal", "Diagram gambar alir"], ans: 1 },
+            { q: "2. Kata kunci utama yang menandai AWAL dan AKHIR pseudocode secara berurutan adalah...", opts: ["START dan FINISH", "OPEN dan CLOSE", "BEGIN dan END", "INIT dan EXIT"], ans: 2 },
+            { q: "3. Perintah manakah yang digunakan untuk meminta data masukan dari pengguna?", opts: ["PRINT", "OUTPUT", "INPUT", "WRITE"], ans: 2 },
+            { q: "4. Perintah manakah yang digunakan untuk menampilkan nilai hasil ke layar?", opts: ["INPUT", "GET", "READ", "OUTPUT"], ans: 3 },
+            { q: "5. Di bawah ini yang merupakan keuntungan menggunakan pseudocode adalah...", opts: ["Mudah dipahami manusia dan merancang logika", "Dapat langsung dijalankan komputer tanpa dikompilasi", "Menghapus virus komputer", "Mempercepat daya RAM"], ans: 0 },
+            { q: "6. Perhatikan baris: 'luas ← 10 * 5'. Apa makna dari simbol panah '←'?", opts: ["Membandingkan apakah sama", "Memasukkan hasil perkalian ke variabel luas", "Menghapus nilai luas", "Menampilkan nilai ke layar"], ans: 1 },
+            { q: "7. Manakah bagian yang merupakan struktur PROCESS dalam pseudocode?", opts: ["INPUT a", "BEGIN", "hasil ← a + b", "END"], ans: 2 },
+            { q: "8. Manakah penulisan pseudocode menampilkan nama yang benar?", opts: ["BEGIN -> INPUT nama -> OUTPUT nama -> END", "BEGIN -> END", "OUTPUT -> INPUT", "INPUT -> OUTPUT"], ans: 0 },
+            { q: "9. Mengapa pseudocode bukan merupakan bahasa pemrograman resmi?", opts: ["Karena menggunakan bahasa Inggris", "Karena tidak memiliki sintaks kaku dan tidak bisa dikompilasi langsung oleh komputer", "Karena dibuat siswa SMP", "Karena berwarna hitam putih"], ans: 1 },
+            { q: "10. Apa fungsi dari bagian BEGIN dalam suatu pseudocode?", opts: ["Menandai batas akhir program", "Menandai titik awal eksekusi algoritma", "Menerima input teks", "Melakukan perhitungan"], ans: 1 },
+            { q: "11. Perhatikan pseudocode: BEGIN -> INPUT p -> INPUT l -> L ← p * l -> OUTPUT L -> END. Jika p=4 dan l=3, berapa keluaran L?", opts: ["7", "12", "1", "43"], ans: 1 },
+            { q: "12. Manakah di bawah ini yang BUKAN merupakan kata kunci baku dalam pseudocode?", opts: ["BEGIN", "INPUT", "OUTPUT", "MAKANAN"], ans: 3 },
+            { q: "13. Dalam pseudocode, data yang dimasukkan melalui INPUT diproses dan disimpan di dalam...", opts: ["Variabel", "Monitor", "Keyboard", "Kabel"], ans: 0 },
+            { q: "14. Langkah sistematis penyelesaian masalah yang menjadi dasar pembuatan pseudocode disebut...", opts: ["Hardware", "Software", "Algoritma", "Database"], ans: 2 },
+            { q: "15. Apa keluaran dari pseudocode: BEGIN -> INPUT x -> OUTPUT x + 2 -> END, jika dimasukkan angka x = 5?", opts: ["52", "7", "3", "10"], ans: 1 }
+        ];
+
+        let quizIndex = 0;
+        let quizCorrect = 0;
+        let currentStudentName = '';
+
+        function startQuiz() {
+            const nameInput = document.getElementById('student-name-input').value.trim();
+            if (!nameInput) {
+                alert("Harap masukkan nama lengkapmu terlebih dahulu!");
+                return;
+            }
+            playSound('click');
+            currentStudentName = nameInput;
+            userProgress.studentName = nameInput;
+
+            document.getElementById('kuis-start-card').classList.add('hidden');
+            document.getElementById('kuis-active-card').classList.remove('hidden');
+
+            quizIndex = 0;
+            quizCorrect = 0;
+            renderQuizStep();
+        }
+
+        function renderQuizStep() {
+            const q = quizData[quizIndex];
+            document.getElementById('quiz-progress-text').innerText = `Soal ${quizIndex + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-student-display').innerText = `Siswa: ${currentStudentName}`;
+            document.getElementById('quiz-live-score').innerText = quizCorrect * 10;
+            document.getElementById('quiz-question-title').innerText = q.q;
+
+            const optsBox = document.getElementById('quiz-options-box');
+            optsBox.innerHTML = '';
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border border-sky-100 dark:border-slate-700 bg-sky-50/50 dark:bg-slate-900 text-sm font-semibold hover:bg-sky-100 transition-all flex justify-between items-center";
+                btn.innerHTML = `<span>${opt}</span><i class="fa-regular fa-circle text-slate-400"></i>`;
+                btn.onclick = () => selectQuizOpt(idx);
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function selectQuizOpt(idx) {
+            const q = quizData[quizIndex];
+            if (idx === q.ans) {
+                playSound('correct');
+                quizCorrect++;
+            } else {
+                playSound('wrong');
+            }
+
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizStep() {
+            playSound('click');
+            quizIndex++;
+            if (quizIndex < quizData.length) {
+                renderQuizStep();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            confetti();
+            userProgress.quizCompleted = true;
+            userProgress.quizScore = Math.round((quizCorrect / quizData.length) * 100);
+            saveProgress();
+            showPage('hasil');
+        }
+
+        function checkAndRenderResult() {
+            if (!userProgress.quizCompleted) {
+                document.getElementById('no-result-msg').classList.remove('hidden');
+                document.getElementById('result-card').classList.add('hidden');
+            } else {
+                document.getElementById('no-result-msg').classList.add('hidden');
+                document.getElementById('result-card').classList.remove('hidden');
+
+                const score = userProgress.quizScore;
+                document.getElementById('result-student-name').innerText = userProgress.studentName || "Siswa Kelas IX";
+                document.getElementById('cert-student-name').innerText = userProgress.studentName || "Siswa Kelas IX";
+                document.getElementById('res-score').innerText = `${score}/100`;
+                document.getElementById('res-correct').innerText = quizCorrect;
+                document.getElementById('res-wrong').innerText = quizData.length - quizCorrect;
+
+                const badge = document.getElementById('result-badge');
+                if (score >= 90) {
+                    badge.innerText = "🌟 Sangat Baik";
+                    badge.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-700";
+                } else if (score >= 80) {
+                    badge.innerText = "👍 Baik";
+                    badge.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-sky-100 text-sky-700";
+                } else if (score >= 70) {
+                    badge.innerText = "🙂 Cukup";
+                    badge.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-700";
+                } else {
+                    badge.innerText = "💪 Ayo Belajar Lagi";
+                    badge.className = "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-rose-100 text-rose-700";
+                }
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('pseudocode_progress', JSON.stringify(userProgress));
+            } catch (e) {}
+        }
+
+        function updateGlobalProgress() {
+            const bar = document.getElementById('global-progress-bar');
+            let pct = 20;
+            if (userProgress.quizCompleted) pct = 100;
+            bar.style.width = `${pct}%`;
+        }
+
+        window.onload = function() {
+            try {
+                const saved = localStorage.getItem('pseudocode_progress');
+                if (saved) userProgress = JSON.parse(saved);
+            } catch (e) {}
+            showPage('beranda');
+        };
+    </script>
+</body>
+</html>
